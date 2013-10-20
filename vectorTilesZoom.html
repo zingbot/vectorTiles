@@ -1,0 +1,98 @@
+
+<!DOCTYPE html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" type="text/css" href="vectortilesZoom.css">
+<style>
+</style>
+</head>
+<body>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="http://d3js.org/d3.geo.tile.v0.min.js"></script>
+<script>
+
+var width = Math.max(550, window.innerWidth),
+    height = Math.max(550, window.innerHeight);
+
+var tiler = d3.geo.tile()
+    .size([width, height]);
+
+var projection = d3.geo.mercator()
+    .scale((1 << 25) / 2 / Math.PI)
+    .translate([width / 2, height / 2]); // just temporary
+
+/* var tileProjection = d3.geo.mercator(); */
+
+var path = d3.geo.path()
+    .projection(projection);
+    
+    var zoom = d3.behavior.zoom()
+    .scale(projection.scale() * 2 * Math.PI)
+    .scaleExtent([1 << 7, 1 << 30])
+    .translate(projection([-74.0064, 40.7142]).map(function(x) { return -x; }))
+    .on("zoom", zoomed)
+
+zoomed();
+
+function zoomed() {
+  var tiles = tiler
+      .scale(zoom.scale())
+      .translate(zoom.translate())
+      ();
+
+  projection
+      .scale(zoom.scale() / 2 / Math.PI)
+      .translate(zoom.translate());
+
+console.log(zoom);
+
+var svg = d3.select("body").append("svg")
+    .attr("width", width)
+    .attr("height", height)
+/*     .call(renderTiles, "pois") */
+/*     .call(renderTiles, "buildings") */
+    .call(renderTiles, "highroad")
+/*   .call(renderTiles, "land-usages")*/
+    .call(renderTiles, "water-areas")
+/*     .call(renderTiles, "skeletron") */
+
+    .call(zoom)
+    .on("mousemove", mousemoved);
+    
+  
+  var info = svg.append("div")
+    .attr("class", "info");
+    
+function mousemoved() {
+  info.text(formatLocation(projection.invert(d3.mouse(this)), zoom.scale()));
+}
+
+function formatLocation(p, k) {
+  var format = d3.format("." + Math.floor(Math.log(k) / 2 - 2) + "f");
+  return (p[1] < 0 ? format(-p[1]) + "°S" : format(p[1]) + "°N") + " "
+       + (p[0] < 0 ? format(-p[0]) + "°W" : format(p[0]) + "°E");
+}
+
+function renderTiles(svg, type) {
+  svg.append("g")
+      .attr("class", type)
+    .selectAll("g")
+      .data(tiler
+        .scale(projection.scale() * 2 * Math.PI)
+        .translate(projection([0, 0])))
+    .enter().append("g")
+      .each(function(d) {
+        var g = d3.select(this);
+        d3.json("http://" + ["a", "b", "c"][(d[0] * 31 + d[1]) % 3] + ".tile.openstreetmap.us/vectiles-" + type + "/" + d[2] + "/" + d[0] + "/" + d[1] + ".json", function(error, json) {
+          g.selectAll("path")
+              .data(json.features.sort(function(a, b) { return a.properties.sort_key - b.properties.sort_key; }))
+            .enter().append("path")
+              .attr("class", function(d) { return d.properties.kind; })
+              .attr("d", path);
+        });
+      });
+}}
+
+</script>
+</body>
+</html>

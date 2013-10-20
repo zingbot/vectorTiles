@@ -1,0 +1,49 @@
+body {
+  	margin: 0;}
+
+path {
+  	fill: none;
+  	stroke: #000;
+  	stroke-linejoin: round;
+  	stroke-linecap: round;}
+
+.major_road { 
+stroke: #CED6DB; 
+	stroke-width: 5px;}
+	
+.path {
+stroke: #CED6DB;
+	stroke-width:1px;
+}
+
+.minor_road { 
+	stroke: #CED6DB; 
+	stroke-width: 2px }
+	
+.highway { 
+	stroke: #565553; 
+	stroke-width: 2px;
+	 }
+	 
+.riverbank {
+		 stroke:#fff;
+		 stroke-width:.5px;
+		 opacity: 1;
+		 -webkit-filter: blur(50px);
+		 z-index:1;
+	 }
+.ocean {
+	fill: taupe;
+	opacity:.15;
+	stroke:0px;
+}
+	
+.rail { stroke: #000; }
+
+.buildings path { stroke: none; fill: #939795; }
+
+info {
+position: absolute;
+bottom: 10px;
+left: 10px;
+}
