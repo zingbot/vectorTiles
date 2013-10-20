@@ -48,6 +48,7 @@ body {
 
 var width = Math.max(960, window.innerWidth),
     height = Math.max(500, window.innerHeight),
+/*     ?? */
     prefix = prefixMatch(["webkit", "ms", "Moz", "O"]);
 
 var tile = d3.geo.tile()
@@ -55,7 +56,7 @@ var tile = d3.geo.tile()
 
 var projection = d3.geo.mercator()
     .scale((1 << 24) / 2 / Math.PI)
-    .translate([-width / 2, -height / 2]); // just temporary
+    .translate([-width / 2, -height / 2]); 
 
 var tileProjection = d3.geo.mercator();
 

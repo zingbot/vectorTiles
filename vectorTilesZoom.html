@@ -19,19 +19,21 @@ var tiler = d3.geo.tile()
 
 var projection = d3.geo.mercator()
     .scale((1 << 21) / 2 / Math.PI)
-    .translate([width / 2, height / 2]); // just temporary
-
+    .translate([width / 2, height / 2]); 
 /* var tileProjection = d3.geo.mercator(); */
 
 var path = d3.geo.path()
     .projection(projection);
     
-    var zoom = d3.behavior.zoom()
+var zoom = d3.behavior.zoom()
     .scale(projection.scale() * 2 * Math.PI)
     .scaleExtent([1 << 7, 1 << 30])
     .translate(projection([-73.988, 40.728]).map(function(x) { return -x; }))
     .on("zoom", zoomed)
 
+
+
+    
 zoomed();
 
 function zoomed() {
@@ -46,7 +48,9 @@ function zoomed() {
 
 console.log(zoom);
 
-var svg = d3.select("body").append("svg")
+ 
+    
+   var svg = d3.select("body").append("svg")
     .attr("width", width)
     .attr("height", height)
 /*     .call(renderTiles, "pois") */
@@ -55,12 +59,10 @@ var svg = d3.select("body").append("svg")
 /*   .call(renderTiles, "land-usages")*/
     .call(renderTiles, "water-areas")
 /*     .call(renderTiles, "skeletron") */
-
     .call(zoom)
     .on("mousemove", mousemoved);
     
-  
-  var info = svg.append("div")
+ var info = svg.append("svg")
     .attr("class", "info");
     
 function mousemoved() {
@@ -92,6 +94,8 @@ function renderTiles(svg, type) {
         });
       });
 }}
+
+
 
 </script>
 </body>
